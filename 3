@@ -1,0 +1,10 @@
+import csv
+
+with open('/content/train.csv', 'r') as csv_file:
+    csv_reader = csv.reader(csv_file)
+    
+    for row in csv_reader:
+        words = [word for word in row if word.isalpha()]
+        words = [word.replace('.', '') for word in words]
+        words = [word.replace(',', '') for word in words]
+        print(' '.join(words))
