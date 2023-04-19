@@ -1,0 +1,21 @@
+import csv
+import re
+
+
+with open('/content/train.csv, 'r') as csv_file:
+    csv_reader = csv.reader(csv_file)
+    for row in csv_reader:
+        # Join all the elements in the row into a single string
+        row_string = ' '.join(row)
+        # Remove all numbers
+        row_string = re.sub(r'\d+', '', row_string)
+        # Remove all commas
+        row_string = row_string.replace(',', '')
+        # Remove all dots
+        row_string = row_string.replace('.', '')
+        # Split the row into words
+        words = row_string.split()
+        # Filter out any empty strings or single-letter words
+        meaningful_words = [word for word in words if len(word) > 1]
+        # Print the meaningful words
+        print(' '.join(meaningful_words))
