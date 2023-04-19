@@ -1,0 +1,55 @@
+import csv
+import string
+import matplotlib.pyplot as plt
+from collections import Counter, defaultdict
+
+# Define the stop words
+stop_words = ['a', 'an', 'the', 'of', 'in', 'and', 'to', 'at', 'on', 'for', 'with', 'that', 'this', 'be', 'is', 'are', 'was', 'were', 'will']
+
+# Define a dictionary to store the word counts
+word_counts = defaultdict(int)
+
+# Read in the dataset and create the list of words
+words = []
+with open('/content/train.csv', 'r') as csv_file:
+    csv_reader = csv.reader(csv_file)
+    for row in csv_reader:
+        for word in row:
+            # Remove punctuation, numbers, and convert to lowercase
+            word = word.translate(str.maketrans('', '', string.punctuation + string.digits)).lower()
+            # Append the word if it's not a stop word and has length > 0
+            if word not in stop_words and len(word) > 0:
+                words.append(word)
+                word_counts[word] += 1
+
+# Separate meaningful words from stop words based on a minimum count threshold
+meaningful_words = []
+stop_words_final = []
+min_count = 10  # adjust as needed
+for word, count in word_counts.items():
+    if count >= min_count:
+        meaningful_words.append((word, count))
+    else:
+        stop_words_final.append(word)
+
+# Print the meaningful words and their counts
+print('Meaningful words:')
+for word, count in sorted(meaningful_words, key=lambda x: x[1], reverse=True):
+    print(f'{word}: {count}')
+
+# Print the stop words and their counts
+print('\nStop words:')
+for word in sorted(stop_words_final):
+    print(word)
+
+# get word frequencies
+word_counts = Counter(words)
+top_words = dict(word_counts.most_common(20))
+
+# plot bar chart
+plt.bar(top_words.keys(), top_words.values())
+plt.xticks(rotation=90)
+plt.xlabel('Words')
+plt.ylabel('Frequency')
+plt.title('Top 20 words')
+plt.show()
