@@ -1,0 +1,25 @@
+import csv
+import string
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+
+stop_words = set(stopwords.words('english'))
+
+word_freq = {}
+
+with open('/content/train.csv', encoding='utf-8') as csvfile:
+    reader = csv.reader(csvfile)
+    for row in reader:
+        for word in row:
+            word = word.lower()
+            word = word.translate(str.maketrans('', '', string.digits+string.punctuation))
+            if word.isalpha() and word not in stop_words:
+                if word in word_freq:
+                    word_freq[word] += 1
+                else:
+                    word_freq[word] = 1
+
+meaningful_words = [word for word in word_freq.keys() if len(word)>1]
+
+print(meaningful_words)
+print(word_freq)
